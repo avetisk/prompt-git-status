@@ -1,0 +1,66 @@
+{
+  "name": "prompt-git-status",
+  "version": "0.0.1",
+  "homepage": "https://github.com/avetisk/prompt-git-status",
+  "description": "returns git status summary for prompt",
+  "keywords": [
+    "git",
+    "prompt",
+    "status"
+  ],
+  "author": {
+    "name": "Avetis Kazarian",
+    "email": "avetis.k@gmail.com",
+    "url": "http://avetis.fr"
+  },
+  "contributors": [ {
+    "name": "Avetis Kazarian",
+    "email": "avetis.k@gmail.com",
+    "url": "http://avetis.fr"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avetisk/prompt-git-status.git"
+  },
+  "bugs": {
+    "url": "https://github.com/avetisk/prompt-git-status/issues"
+  },
+  "bin": {
+    "prompt-git-status": "./bin/prompt-git-status"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "colors": "~0.6.2"
+  },
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "jshintConfig": {
+    "bitwise": false,
+    "camelcase": false,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "immed": true,
+    "indent": 2,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": false,
+    "plusplus": true,
+    "quotmark": "single",
+    "undef": true,
+    "unused": true,
+    "strict": true,
+    "trailing": true,
+    "sub": true,
+    "boss": true,
+    "node": true
+  },
+  "preferGlobal": true,
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/jshint/jshint/blob/master/LICENSE"
+  }]
+}
