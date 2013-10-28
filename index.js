@@ -1,19 +1,18 @@
 'use strict';
 
-require('colors');
 var exec = require('child_process').exec;
 var conf = {
-  'branch': String(' <val> '.redBG).white,
-  'M': String(' M <val> '.blue).inverse,
-  'A': String(' A <val> '.green).inverse,
-  'D': String(' D <val> '.blue).inverse,
-  'R': String(' R <val> '.blue).inverse,
-  'C': String(' C <val> '.blue).inverse,
-  'U': String(' U <val> '.blue).inverse,
-  '?': String(' ? <val> '.red).inverse,
-  'push': String(' ⌃ <val> '.magenta).inverse,
-  'pull': String(' ⌄ <val> '.magenta).inverse,
-  'separator': ' · '.white
+  'branch': '%{$fg[white]%}%{$bg[red]%} <val> %{${reset_color}%}',
+  'M': '%{$fg[white]%}%{$bg[blue]%} M <val> %{${reset_color}%}',
+  'A': '%{$fg[white]%}%{$bg[green]%} A <val> %{${reset_color}%}',
+  'D': '%{$fg[white]%}%{$bg[blue]%} D <val> %{${reset_color}%}',
+  'R': '%{$fg[white]%}%{$bg[blue]%} R <val> %{${reset_color}%}',
+  'C': '%{$fg[white]%}%{$bg[blue]%} C <val> %{${reset_color}%}',
+  'U': '%{$fg[white]%}%{$bg[blue]%} U <val> %{${reset_color}%}',
+  '?': '%{$fg[white]%}%{$bg[red]%} ? <val> %{${reset_color}%}',
+  'push': '%{$fg[white]%}%{$bg[magenta]%} ⌃ <val> %{${reset_color}%}',
+  'pull': '%{$fg[white]%}%{$bg[magenta]%} ⌄ <val> %{${reset_color}%}',
+  'separator': ' %{$fg[white]%}·%{${reset_color}%} '
 };
 var customConf = process.env.AVETISK_GIT_PROMPT;
 
@@ -52,7 +51,7 @@ var print = function () {
     }
   }
 
-  process.stdout.write(prompt.join(conf['separator']));
+  process.stdout.write(prompt.join(conf['separator']).trim());
 };
 
 exec('git rev-parse --is-inside-work-tree', function (err, stdout) {
@@ -115,4 +114,10 @@ exec('git rev-parse --is-inside-work-tree', function (err, stdout) {
       });
     });
   });
+});
+
+process.stdout.on('error', function (err) {
+  if (err.code === 'EPIPE') {
+    process.exit(0);
+  }
 });

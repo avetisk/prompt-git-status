@@ -1,6 +1,6 @@
 {
   "name": "prompt-git-status",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/avetisk/prompt-git-status",
   "description": "returns git status summary for prompt",
   "keywords": [
@@ -29,9 +29,6 @@
     "prompt-git-status": "./bin/prompt-git-status"
   },
   "main": "index.js",
-  "dependencies": {
-    "colors": "~0.6.2"
-  },
   "engines": {
     "node": ">=0.10.x"
   },
