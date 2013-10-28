@@ -2,16 +2,16 @@
 
 var exec = require('child_process').exec;
 var conf = {
-  'branch': '%{$fg[white]%}%{$bg[red]%} <val> %{${reset_color}%}',
-  'M': '%{$fg[white]%}%{$bg[blue]%} M <val> %{${reset_color}%}',
-  'A': '%{$fg[white]%}%{$bg[green]%} A <val> %{${reset_color}%}',
-  'D': '%{$fg[white]%}%{$bg[blue]%} D <val> %{${reset_color}%}',
-  'R': '%{$fg[white]%}%{$bg[blue]%} R <val> %{${reset_color}%}',
-  'C': '%{$fg[white]%}%{$bg[blue]%} C <val> %{${reset_color}%}',
-  'U': '%{$fg[white]%}%{$bg[blue]%} U <val> %{${reset_color}%}',
-  '?': '%{$fg[white]%}%{$bg[red]%} ? <val> %{${reset_color}%}',
-  'push': '%{$fg[white]%}%{$bg[magenta]%} ⌃ <val> %{${reset_color}%}',
-  'pull': '%{$fg[white]%}%{$bg[magenta]%} ⌄ <val> %{${reset_color}%}',
+  'branch': '%{$fg[white]$bg[red]%} <val> %{${reset_color}%}',
+  'M': '%{$fg[white]$bg[blue]%} M <val> %{${reset_color}%}',
+  'A': '%{$fg[white]$bg[green]%} A <val> %{${reset_color}%}',
+  'D': '%{$fg[white]$bg[blue]%} D <val> %{${reset_color}%}',
+  'R': '%{$fg[white]$bg[blue]%} R <val> %{${reset_color}%}',
+  'C': '%{$fg[white]$bg[blue]%} C <val> %{${reset_color}%}',
+  'U': '%{$fg[white]$bg[blue]%} U <val> %{${reset_color}%}',
+  '?': '%{$fg[white]$bg[red]%} \\? <val> %{${reset_color}%}',
+  'push': '%{$fg[white]$bg[magenta]%} ⌃ <val> %{${reset_color}%}',
+  'pull': '%{$fg[white]$bg[magenta]%} ⌄ <val> %{${reset_color}%}',
   'separator': ' %{$fg[white]%}·%{${reset_color}%} '
 };
 var customConf = process.env.AVETISK_GIT_PROMPT;
@@ -26,16 +26,16 @@ if (customConf) {
 }
 
 var current = {
-  'branch': null,
-  '?': 0,
-  'M': 0,
-  'A': 0,
-  'D': 0,
-  'R': 0,
-  'C': 0,
   'U': 0,
+  'C': 0,
+  'R': 0,
+  'D': 0,
+  'A': 0,
+  'M': 0,
+  '?': 0,
   'push': 0,
-  'pull': 0
+  'pull': 0,
+  'branch': null,
 };
 
 var print = function () {
@@ -66,7 +66,7 @@ exec('git rev-parse --is-inside-work-tree', function (err, stdout) {
 
     current['branch'] = stdout.trim();
 
-    exec('git log `git remote`/' + current.branch + '..HEAD --pretty=online | wc -l', function (err, stdout) {
+    exec('git log `git remote`/' + current.branch + '..HEAD --pretty=online 2>/dev/null | wc -l', function (err, stdout) {
       if (err) {
         return;
       }
