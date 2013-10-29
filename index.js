@@ -66,7 +66,7 @@ exec('git rev-parse --is-inside-work-tree', function (err, stdout) {
 
     current['branch'] = stdout.trim();
 
-    exec('git log `git remote`/' + current.branch + '..HEAD --pretty=online 2>/dev/null | wc -l', function (err, stdout) {
+    exec('git log `git remote`/' + current['branch'] + '..HEAD --pretty=oneline | wc -l', function (err, stdout) {
       if (err) {
         return;
       }
