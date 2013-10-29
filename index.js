@@ -73,44 +73,52 @@ exec('git rev-parse --is-inside-work-tree', function (err, stdout) {
 
       current['push'] += parseInt(stdout, 10);
 
-      exec('git status --porcelain', function (err, stdout) {
+      exec('git log HEAD..`git remote`/' + current['branch'] + ' --pretty=oneline | wc -l', function (err, stdout) {
         if (err) {
           return;
         }
 
-        /*jshint quotmark: true*/
-        var stats = stdout.trim().split("\n");
-        /*jshint quotmark: single*/
-        var stat;
+        current['pull'] += parseInt(stdout, 10);
 
-        for (var i = 0, len = stats.length; i < len; i += 1) {
-          stat = stats[i].split(' ')[0].split('');
+        exec('git status --porcelain', function (err, stdout) {
+          if (err) {
+            return;
+          }
 
-          for (var i2 = 0, len2 = stat.length; i2 < len2; i2 += 1) {
-            if (stat[i2] === 'M') {
-              current['M'] += 1;
-            }
+          /*jshint quotmark: true*/
+          var stats = stdout.trim().split("\n");
+          /*jshint quotmark: single*/
+          var stat;
 
-            if (stat[i2] === 'A') {
-              current['A'] += 1;
-            }
+          for (var i = 0, len = stats.length; i < len; i += 1) {
+            stat = stats[i].split(' ')[0].split('');
 
-            if (stat[i2] === 'D') {
-              current['D'] += 1;
-            }
+            for (var i2 = 0, len2 = stat.length; i2 < len2; i2 += 1) {
+              if (stat[i2] === 'M') {
+                current['M'] += 1;
+              }
 
-            if (stat[i2] === 'R') {
-              current['R'] += 1;
-            }
+              if (stat[i2] === 'A') {
+                current['A'] += 1;
+              }
 
-            if (stat[i2] === '?') {
-              current['?'] += 1;
-              i2 += 1;
+              if (stat[i2] === 'D') {
+                current['D'] += 1;
+              }
+
+              if (stat[i2] === 'R') {
+                current['R'] += 1;
+              }
+
+              if (stat[i2] === '?') {
+                current['?'] += 1;
+                i2 += 1;
+              }
             }
           }
-        }
 
-        print();
+          print();
+        });
       });
     });
   });
