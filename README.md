@@ -10,6 +10,8 @@ Simply export a stringified JSON:
 export AVETISK_GIT_PROMPT='{"branch":"[<val>]","M":"M <val>"}';
 ```
 
+`<val>` is replaced with its key's specific value.
+
 Default JSON is:
 
 ```javascript
