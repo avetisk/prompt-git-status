@@ -43,8 +43,10 @@ export default {
     colorizeWarn(
       ' U ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
     ),
-  pull: ({ count }) => colorizeInfo(' - ', ` ${count} `),
-  push: ({ count }) => colorizeInfo(' + ', ` ${count} `),
+  diff: ({ local, remote }) =>
+    colorizeInfo(
+      ' != ', ` ${local ? `+${local}` : ''}${local && remote ? '/' : ''}${remote ? `-${remote}` : ''} `
+    ),
   separator: ' ',
   branch: ({ branch }) => colorize('red')(` ${branch} `),
 }
