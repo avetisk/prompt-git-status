@@ -35,8 +35,10 @@ const defaultConf = {
     colorizeWarn(
       ' U ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
     ),
-  pull: ({ count }) => colorizeInfo(' - ', ` ${count} `),
-  push: ({ count }) => colorizeInfo(' + ', ` ${count} `),
+  diff: ({ local, remote }) =>
+    colorizeInfo(
+      ' != ', ` ${local ? `+${local}` : ''}${local && remote ? '/' : ''}${remote ? `-${remote}` : ''} `
+    ),
   separator: ' ',
   branch: ({ branch }) => colorize('red')(` ${branch} `),
 }
@@ -106,7 +108,7 @@ new Promise((resolve, reject) => {
       )
     ),
   ]))
-  .then(([push, pull, status]) => Object.assign({}, status, { push: { push }, pull: { pull } }))
+  .then(([push, pull, status]) => Object.assign({}, status, { diff: { local: push, remote: pull } }))
   .then(print)
   .catch(() => process.stdout.write('ERR: no git status'))
 
