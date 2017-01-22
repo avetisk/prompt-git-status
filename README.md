@@ -4,28 +4,48 @@ Basic git status for prompt
 # Custom format
 Default format is made for ZSH, but you can easily make you own for BASH, KSH, etc.
 
-Simply export a stringified JSON:
-
 ```sh
-export AVETISK_GIT_PROMPT='{"branch":"[<val>]","M":"M <val>"}';
+export AVETISK_GIT_PROMPT=/absolute/path/to/config.js
 ```
 
-`<val>` is replaced with its key's specific value.
-
-Default JSON is:
+Configuration file should be something like this:
 
 ```javascript
-{
-  "branch": "%{$fg[white]$bg[red]%} <val> %{${reset_color}%}",
-  "M": "%{$fg[white]$bg[blue]%} M <val> %{${reset_color}%}",
-  "A": "%{$fg[white]$bg[green]%} A <val> %{${reset_color}%}",
-  "D": "%{$fg[white]$bg[blue]%} D <val> %{${reset_color}%}",
-  "R": "%{$fg[white]$bg[blue]%} R <val> %{${reset_color}%}",
-  "C": "%{$fg[white]$bg[blue]%} C <val> %{${reset_color}%}",
-  "U": "%{$fg[white]$bg[blue]%} U <val> %{${reset_color}%}",
-  "?": "%{$fg[white]$bg[red]%} \\? <val> %{${reset_color}%}",
-  "push": "%{$fg[white]$bg[magenta]%} ⌃ <val> %{${reset_color}%}",
-  "pull": "%{$fg[white]$bg[magenta]%} ⌄ <val> %{${reset_color}%}",
-  "separator": " %{$fg[white]%}·%{${reset_color}%} "
+const colorize = firstColor => (firstStr, secondStr = '') =>
+    `%{$fg[black]$bg[${firstColor}]%}${firstStr}%{\${reset_color}%}%{$fg[black]$bg[white]%}${secondStr}%{\${reset_color}%}`
+const colorizeInfo = colorize('blue')
+const colorizePrimary = colorize('blue')
+const colorizeWarn = colorize('red')
+
+export default {
+  '?': count => colorizeWarn(' \\? ', ` ${count} `),
+  A: ({ staged, unstaged }) =>
+    colorizePrimary(
+      ' A ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  C: ({ staged, unstaged }) =>
+    colorizeWarn(
+      ' C ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  D: ({ staged, unstaged }) =>
+    colorizePrimary(
+      ' D ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  M: ({ staged, unstaged }) =>
+    colorizePrimary(
+      ' M ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  R: ({ staged, unstaged }) =>
+    colorizePrimary(
+      ' R ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  U: ({ staged, unstaged }) =>
+    colorizeWarn(
+      ' U ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+    ),
+  pull: ({ count }) => colorizeInfo(' - ', ` ${count} `),
+  push: ({ count }) => colorizeInfo(' + ', ` ${count} `),
+  separator: ' ',
+  branch: ({ branch }) => colorize('red')(` ${branch} `),
 }
 ```

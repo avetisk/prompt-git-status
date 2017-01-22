@@ -1,6 +1,6 @@
 {
   "name": "prompt-git-status",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "homepage": "https://github.com/avetisk/prompt-git-status",
   "description": "returns git status summary for prompt",
   "keywords": [
@@ -13,11 +13,13 @@
     "email": "avetis.k@gmail.com",
     "url": "http://avetis.fr"
   },
-  "contributors": [ {
-    "name": "Avetis Kazarian",
-    "email": "avetis.k@gmail.com",
-    "url": "http://avetis.fr"
-  }],
+  "contributors": [
+    {
+      "name": "Avetis Kazarian",
+      "email": "avetis.k@gmail.com",
+      "url": "http://avetis.fr"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/avetisk/prompt-git-status.git"
@@ -30,34 +32,15 @@
   },
   "main": "index.js",
   "engines": {
-    "node": ">=0.10.x"
-  },
-  "jshintConfig": {
-    "bitwise": false,
-    "camelcase": false,
-    "curly": true,
-    "eqeqeq": true,
-    "forin": true,
-    "immed": true,
-    "indent": 2,
-    "latedef": true,
-    "newcap": true,
-    "noarg": true,
-    "noempty": true,
-    "nonew": false,
-    "plusplus": true,
-    "quotmark": "single",
-    "undef": true,
-    "unused": true,
-    "strict": true,
-    "trailing": true,
-    "sub": true,
-    "boss": true,
-    "node": true
+    "node": ">=0.7.3"
   },
   "preferGlobal": true,
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/jshint/jshint/blob/master/LICENSE"
-  }]
+  "licenses": "MIT",
+  "devDependencies": {
+    "eslint": "^3.13.0",
+    "eslint-config-airbnb": "latest",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0"
+  }
 }
