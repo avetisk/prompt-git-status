@@ -18,7 +18,7 @@ const colorizePrimary = colorize('blue')
 const colorizeWarn = colorize('red')
 
 export default {
-  '?': count => colorizeWarn(' \\? ', ` ${count} `),
+  '?': ({ staged }) => colorizeWarn(' \\? ', ` ${staged} `),
   A: ({ staged, unstaged }) =>
     colorizePrimary(
       ' A ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `

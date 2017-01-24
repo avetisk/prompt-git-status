@@ -10,7 +10,7 @@ const colorizeWarn = colorize('red')
 
 const customConf = process.env.AVETISK_GIT_PROMPT
 const defaultConf = {
-  '?': count => colorizeWarn(' \\? ', ` ${count} `),
+  '?': ({ staged }) => colorizeWarn(' \\? ', ` ${staged} `),
   A: ({ staged, unstaged }) =>
     colorizePrimary(
       ' A ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
@@ -40,7 +40,7 @@ const defaultConf = {
       ' != ', ` ${local ? `+${local}` : ''}${local && remote ? '/' : ''}${remote ? `-${remote}` : ''} `
     ),
   separator: ' ',
-  branch: ({ branch }) => colorize('red')(` ${branch} `),
+  branch: ({ branch }) => colorize('green')(` ${branch} `),
 }
 const config = Object.assign(
   {},
