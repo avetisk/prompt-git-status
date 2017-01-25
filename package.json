@@ -1,6 +1,6 @@
 {
   "name": "prompt-git-status",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "homepage": "https://github.com/avetisk/prompt-git-status",
   "description": "returns git status summary for prompt",
   "keywords": [
