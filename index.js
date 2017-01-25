@@ -1,46 +1,50 @@
 const exec = require('child_process').exec
 
 /* eslint-disable no-template-curly-in-string */
-const colorize = firstColor => (firstStr, secondStr = '') =>
-    `%{$fg[black]$bg[${firstColor}]%}${firstStr}%{\${reset_color}%}%{$fg[black]$bg[white]%}${secondStr}%{\${reset_color}%}`
+const colorize = color => (firstStr, secondStr = '') =>
+    `%{$fg[black]$bg[${color}]%}${firstStr}%{\${reset_color}%}%{$fg[black]$bg[white]%}${secondStr}%{\${reset_color}%}`
 /* eslint-enable no-template-curly-in-string */
 const colorizeInfo = colorize('blue')
-const colorizePrimary = colorize('blue')
 const colorizeWarn = colorize('red')
 
 const customConf = process.env.AVETISK_GIT_PROMPT
 const defaultConf = {
-  '?': ({ staged }) => colorizeWarn(' \\? ', ` ${staged} `),
-  A: ({ staged, unstaged }) =>
-    colorizePrimary(
-      ' A ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  C: ({ staged, unstaged }) =>
-    colorizeWarn(
-      ' C ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  D: ({ staged, unstaged }) =>
-    colorizePrimary(
-      ' D ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  M: ({ staged, unstaged }) =>
-    colorizePrimary(
-      ' M ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  R: ({ staged, unstaged }) =>
-    colorizePrimary(
-      ' R ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  U: ({ staged, unstaged }) =>
-    colorizeWarn(
-      ' U ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
-    ),
-  diff: ({ local, remote }) =>
-    colorizeInfo(
-      ' != ', ` ${local ? `+${local}` : ''}${local && remote ? '/' : ''}${remote ? `-${remote}` : ''} `
-    ),
-  separator: ' ',
-  branch: ({ branch }) => colorize('green')(` ${branch} `),
+  order: ['U', 'C', 'D', 'R', '?', 'A', 'M', 'branch'],
+  labels: {
+    '?': ({ staged }) => colorizeWarn(' \\? ', ` ${staged} `),
+    A: ({ staged, unstaged }) =>
+      colorizeInfo(
+        ' A ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    C: ({ staged, unstaged }) =>
+      colorizeWarn(
+        ' C ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    D: ({ staged, unstaged }) =>
+      colorizeInfo(
+        ' D ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    M: ({ staged, unstaged }) =>
+      colorizeInfo(
+        ' M ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    R: ({ staged, unstaged }) =>
+      colorizeInfo(
+        ' R ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    U: ({ staged, unstaged }) =>
+      colorizeWarn(
+        ' U ', ` ${staged ? `+${staged}` : ''}${staged && unstaged ? '/' : ''}${unstaged ? `-${unstaged}` : ''} `
+      ),
+    separator: ' ',
+    branch: ({ branch, local, remote }) =>
+      colorize('green')(
+        ` ${branch} `,
+        local || remote
+          ? ` ${local ? `+${local}` : ''}${local && remote ? '/' : ''}${remote ? `-${remote}` : ''} `
+          : ''
+      ),
+  },
 }
 const config = Object.assign(
   {},
@@ -50,12 +54,11 @@ const config = Object.assign(
 )
 
 const print = status => process.stdout.write(
-  Object
-    .entries(status)
-    .filter(([, values]) => Object.entries(values).filter(([, val]) => val).length)
-    .map(([labelKey, values]) => config[labelKey](values))
-    .filter(x => x)
-    .join(config.separator)
+  config
+    .order
+    .filter(label => Object.values(status[label]).some(value => value))
+    .map(label => config.labels[label](status[label]))
+    .join(config.labels.separator)
     .trim()
 )
 
@@ -85,7 +88,6 @@ new Promise((resolve, reject) => {
           ? reject()
           : resolve(
             stdout
-              .trim()
               .split('\n')
               .reduce((status, [first, last]) => {
                 const result = Object.assign({}, status)
@@ -108,7 +110,8 @@ new Promise((resolve, reject) => {
       )
     ),
   ]))
-  .then(([push, pull, status]) => Object.assign({}, status, { diff: { local: push, remote: pull } }))
+  .then(([local, remote, status]) =>
+    Object.assign({}, status, { branch: { local, remote, branch: status.branch.branch } }))
   .then(print)
   .catch(() => process.stdout.write('ERR: no git status'))
 
