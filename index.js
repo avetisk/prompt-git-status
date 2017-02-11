@@ -62,12 +62,12 @@ const print = status => process.stdout.write(
     .trim()
 )
 
-new Promise((resolve, reject) => {
+new Promise((resolve, reject) =>
   exec('git rev-parse --is-inside-work-tree', (err, stdout) => (err || stdout.trim() !== 'true'
     ? reject()
     : resolve())
   )
-})
+)
   .then(() => new Promise(resolve => exec('git rev-parse --abbrev-ref HEAD', (err, stdout) =>
     resolve(err ? '\\?\\?\\?' : stdout.trim())
   )))
