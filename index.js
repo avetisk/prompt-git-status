@@ -10,6 +10,11 @@ const colorizeWarn = colorize('red')
 const customConf = process.env.AVETISK_GIT_PROMPT
 const defaultConf = {
   order: ['U', 'C', 'D', 'R', '?', 'A', 'M', 'branch'],
+  errors: {
+    /* eslint-disable no-template-curly-in-string */
+    notGitRepo: '%{$fg[black]$bg[white]%} ø git %{${reset_color}%}',
+    /* eslint-enable no-template-curly-in-string */
+  },
   labels: {
     '?': ({ staged }) => colorizeWarn(' \\? ', ` ${staged} `),
     A: ({ staged, unstaged }) =>
@@ -64,7 +69,7 @@ const print = status => process.stdout.write(
 
 new Promise((resolve, reject) =>
   exec('git rev-parse --is-inside-work-tree', (err, stdout) => (err || stdout.trim() !== 'true'
-    ? reject()
+    ? reject(new Error('not_git_repo'))
     : resolve())
   )
 )
@@ -113,6 +118,10 @@ new Promise((resolve, reject) =>
   .then(([local, remote, status]) =>
     Object.assign({}, status, { branch: { local, remote, branch: status.branch.branch } }))
   .then(print)
-  .catch(() => process.stdout.write('ERR: no git status'))
+  .catch(err => process.stdout.write(
+    `${err}` === 'Error: not_git_repo'
+      ? config.errors.notGitRepo
+      : 'ERR: no git status'
+  ))
 
 process.stdout.on('error', ({ code }) => code === 'EPIPE' && process.exit(0))
