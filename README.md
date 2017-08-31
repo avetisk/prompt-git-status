@@ -1,6 +1,10 @@
 # Description
 Basic git status for prompt
 
+**DEPRECATED!!!*
+
+Use https://github.com/avetisk/zsh-git-prompt instead. This new version is written in python, using libgit2, and thus is blazing fast compared to the node version (mainly because node takes too much time to start).
+
 # Custom format
 Default format is made for ZSH, but you can easily make you own for BASH, KSH, etc.
 
